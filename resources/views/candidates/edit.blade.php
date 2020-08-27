@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section("breadcrumb")
 <li class="breadcrumb-item">{{ link_to_route('candidates.index', 'Candidates')}}</li>
-<li class="breadcrumb-item active">Add Candidate</li>
+<li class="breadcrumb-item active">Edit Candidate</li>
 @endsection
 @section('extra_css')
 <link rel="stylesheet" href="{{asset('assets/css/bootstrap-datepicker.min.css')}}">
@@ -9,9 +9,9 @@
 @section('content')
 <div class="row">
   <div class="col-md-12">
-    <div class="card card-success">
+    <div class="card card-warning">
       <div class="card-header">
-        <h3 class="card-title">Add Record</h3>
+        <h3 class="card-title">Edit Record</h3>
       </div>
 
       <div class="card-body">
@@ -25,7 +25,10 @@
           </div>
         @endif
 
-        {!! Form::open(['route' => 'candidates.store','method'=>'post','files'=>true]) !!}
+                    {!! Form::open(['route' => ['candidates.update',$data->id],'method'=>'PATCH','files'=>true]) !!}
+
+                    {!! Form::hidden('id',$data->id)!!}
+                    {!! Form::hidden('edit',1)!!}
 
                         @csrf
 
@@ -33,7 +36,7 @@
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $data->name }}" required autocomplete="name" autofocus>
 
                                 @error('name')
                                     <span class="invalid-feedback" role="alert">
@@ -47,7 +50,7 @@
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $data->email }}" required autocomplete="email">
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -60,7 +63,7 @@
                             <label for="birth_date" class="col-md-4 col-form-label text-md-right">Birth Date</label>
 
                             <div class="col-md-6">
-                                <input id="birth_date" type="text" class="form-control @error('birth_date') is-invalid @enderror" name="birth_date" value="{{ old('birth_date') }}" required>
+                                <input id="birth_date" type="text" class="form-control @error('birth_date') is-invalid @enderror" name="birth_date" value="{{ $data->birth_date }}" required>
 
                                 @error('birth_date')
                                     <span class="invalid-feedback" role="alert">
@@ -73,7 +76,7 @@
                             <label for="phone" class="col-md-4 col-form-label text-md-right">Phone No.</label>
 
                             <div class="col-md-6">
-                                <input id="phone" type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('name') }}" required>
+                                <input id="phone" type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ $data->phone }}" required>
 
                                 @error('phone')
                                     <span class="invalid-feedback" role="alert">
@@ -86,8 +89,8 @@
                             <label for="gender" class="col-md-4 col-form-label text-md-right">Gender</label>
 
                             <div class="col-md-6">
-                                <input id="gender" type="radio"  name="gender" value="1">Female
-                                <input id="gender" type="radio"  name="gender" value="0">Male
+                                <input id="gender" type="radio"  name="gender" value="1" @if($data->gender == 1) checked @endif>Female
+                                <input id="gender" type="radio"  name="gender" value="0" @if($data->gender == 0) checked @endif>Male
 
                                 @error('gender')
                                     <span class="invalid-feedback" role="alert">
@@ -100,7 +103,7 @@
                             <label for="city" class="col-md-4 col-form-label text-md-right">City</label>
 
                             <div class="col-md-6">
-                                <input id="city" type="text" class="form-control @error('city') is-invalid @enderror" name="city" value="{{ old('city') }}" required>
+                                <input id="city" type="text" class="form-control @error('city') is-invalid @enderror" name="city" value="{{ $data->city }}" required>
 
                                 @error('city')
                                     <span class="invalid-feedback" role="alert">
@@ -113,7 +116,7 @@
                             <label for="country" class="col-md-4 col-form-label text-md-right">Country</label>
 
                             <div class="col-md-6">
-                                <input id="country" type="text" class="form-control @error('country') is-invalid @enderror" name="country" value="{{ old('city') }}" required>
+                                <input id="country" type="text" class="form-control @error('country') is-invalid @enderror" name="country" value="{{ $data->country }}" required>
 
                                 @error('country')
                                     <span class="invalid-feedback" role="alert">
@@ -154,7 +157,7 @@
       <div class="card-footer">
         <div class="row">
           <div class="form-group col-md-4">
-            {!! Form::submit('Save', ['class' => 'btn btn-success']) !!}
+            {!! Form::submit('Save', ['class' => 'btn btn-warning']) !!}
           </div>
         </div>
       </div>

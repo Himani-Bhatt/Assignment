@@ -36,31 +36,30 @@ class CandidateController extends Controller
         );
 
         $file = $request->file('image');
-        // dd($file);
 
-        // if ($request->hasFile('image') && $request->file('image')->isValid()) {
-        //     $destinationPath = './uploads'; // upload path
-        //     $extension = $file->getClientOriginalExtension();
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            $destinationPath = './uploads'; // upload path
+            $extension = $file->getClientOriginalExtension();
 
-        //     $fileName1 = Str::uuid() . '.' . $extension;
+            $fileName1 = Str::uuid() . '.' . $extension;
 
-        //     $file->move($destinationPath, $fileName1);
-        //     $new->image = $fileName1;
-        //     $new->save();
-        // }
+            $file->move($destinationPath, $fileName1);
+            $new->image = $fileName1;
+            $new->save();
+        }
 
-        // $pdf = $request->file('pdf');
+        $pdf = $request->file('pdf');
 
-        // if ($request->hasFile('pdf') && $request->file('pdf')->isValid()) {
-        //     $destinationPath = './uploads'; // upload path
-        //     $extension = $pdf->getClientOriginalExtension();
+        if ($request->hasFile('pdf') && $request->file('pdf')->isValid()) {
+            $destinationPath = './uploads'; // upload path
+            $extension = $pdf->getClientOriginalExtension();
 
-        //     $fileName1 = Str::uuid() . '.' . $extension;
+            $fileName1 = Str::uuid() . '.' . $extension;
 
-        //     $file->move($destinationPath, $fileName1);
-        //     $new->pdf = $fileName1;
-        //     $new->save();
-        // }
+            $file->move($destinationPath, $fileName1);
+            $new->pdf = $fileName1;
+            $new->save();
+        }
 
         return redirect('candidates');
     }
@@ -71,12 +70,22 @@ class CandidateController extends Controller
         return view('candidates.edit', compact('data'));
     }
 
-    public function update(TestimonialRequest $request)
+    public function update(CandidateRequest $request)
     {
-        $data = Candidate::find($request->id);
-        $data->name = $request->name;
-        $data->details = $request->details;
-        $data->save();
+        Candidate::where('id', $request->id)->update(
+            [
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'birth_date' => date('Y-m-d', strtotime($request->birth_date)),
+                'gender' => $request->gender,
+                'phone' => $request->phone,
+                'city' => $request->city,
+                'country' => $request->country,
+            ]
+        );
+
+        $new = Candidate::find($request->id);
         $file = $request->file('image');
 
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -86,9 +95,23 @@ class CandidateController extends Controller
             $fileName1 = Str::uuid() . '.' . $extension;
 
             $file->move($destinationPath, $fileName1);
-            $data->image = $fileName1;
-            $data->save();
+            $new->image = $fileName1;
+            $new->save();
         }
+
+        $pdf = $request->file('pdf');
+
+        if ($request->hasFile('pdf') && $request->file('pdf')->isValid()) {
+            $destinationPath = './uploads'; // upload path
+            $extension = $pdf->getClientOriginalExtension();
+
+            $fileName1 = Str::uuid() . '.' . $extension;
+
+            $file->move($destinationPath, $fileName1);
+            $new->pdf = $fileName1;
+            $new->save();
+        }
+
         return redirect('candidates');
     }
 

@@ -32,8 +32,7 @@
   'csrfToken' => csrf_token()
   ]) !!};
   </script>
-  <!-- browser notification -->
-  <script type="text/javascript" src="{{asset('assets/push_notification/app.js')}}"></script>
+
   <style type="text/css">
     tfoot input {
         width: 100%;
@@ -88,7 +87,7 @@
               </div>
             </div>
             <div>
-            <div style="margin: 5px;">
+            <div>
 
               <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-secondary btn-flat pull-right"> <i class="fa fa-sign-out"></i>
               Logout
@@ -224,38 +223,9 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-  $('#data_table tfoot th').each( function () {
-    // console.log($('#data_table tfoot th').length);
-    if($(this).index() != 0 && $(this).index() != $('#data_table tfoot th').length - 1) {
-      var title = $(this).text();
-      $(this).html( '<input type="text" placeholder="'+title+'" />' );
-    }
-  });
-
-  $('#data_table1 tfoot th').each( function () {
-    // console.log($(this).index());
-    if($(this).index() != 0 && $(this).index() != $('#data_table1 tfoot th').length - 1){
-    var title = $(this).text();
-    $(this).html( '<input type="text" placeholder="'+title+'" />' );
-  }
-
-  });
-
-
 
   var table = $('#data_table').DataTable({
-
      columnDefs: [ { orderable: false, targets: [0] } ],
-     // individual column search
-     "initComplete": function() {
-              table.columns().every(function () {
-                var that = this;
-                $('input', this.footer()).on('keyup change', function () {
-                  // console.log($(this).parent().index());
-                    that.search(this.value).draw();
-                });
-              });
-            }
   });
 
   $('[data-toggle="tooltip"]').tooltip();

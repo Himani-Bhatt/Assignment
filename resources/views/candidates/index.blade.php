@@ -42,7 +42,13 @@
                 <td>{{$row->phone}}</td>
                 <td>{{($row->gender == 1)?"Female":"Male"}}</td>
                 <td>
+              <a class="btn btn-warning" href="{{ url("candidates/".$row->id."/edit") }}"> Edit</a>
+              <a class="btn btn-danger" data-id="{{$row->id}}" data-toggle="modal" data-target="#myModal"> Delete</a>
+              {!! Form::open(['url' => 'candidates/'.$row->id,'method'=>'DELETE','class'=>'form-horizontal','id'=>'form_'.$row->id]) !!}
 
+              {!! Form::hidden("id",$row->id) !!}
+
+              {!! Form::close() !!}
                 </td>
               </tr>
             @endforeach

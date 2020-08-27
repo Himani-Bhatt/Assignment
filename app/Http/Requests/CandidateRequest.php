@@ -23,17 +23,33 @@ class CandidateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'required',
-            'email' => 'required|email',
-            'image' => 'required|image|mimes:jpeg,png,jpg',
-            'pdf' => 'required|mimes:pdf,doc,docx',
-            'password' => 'required|min:8',
-            'birth_date' => 'required|date',
-            'gender' => 'required|integer',
-            'phone' => 'required',
-            'city' => 'required',
-            'country' => 'required',
-        ];
+        if ($this->request->has("edit")) {
+            return [
+                'name' => 'required',
+                'email' => 'required|email',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg',
+                'pdf' => 'nullable|mimes:pdf,doc,docx',
+                'password' => 'required|min:8',
+                'birth_date' => 'required|date',
+                'gender' => 'required|integer',
+                'phone' => 'required',
+                'city' => 'required',
+                'country' => 'required',
+            ];
+        } else {
+            return [
+                'name' => 'required',
+                'email' => 'required|email',
+                'image' => 'required|image|mimes:jpeg,png,jpg',
+                'pdf' => 'required|mimes:pdf,doc,docx',
+                'password' => 'required|min:8',
+                'birth_date' => 'required|date',
+                'gender' => 'required|integer',
+                'phone' => 'required',
+                'city' => 'required',
+                'country' => 'required',
+            ];
+
+        }
     }
 }
