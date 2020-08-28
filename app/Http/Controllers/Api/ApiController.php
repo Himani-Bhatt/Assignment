@@ -2,14 +2,171 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\AssignedTags;
 use App\Candidate;
+use App\CandidateLog;
 use App\Http\Controllers\Controller;
 use App\Note;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Validator;
 
 class ApiController extends Controller
 {
+
+    public function delete_candidate(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'id' => 'required|integer',
+
+        ]);
+        $errors = $validation->errors();
+
+        if (count($errors) > 0) {
+            $data['success'] = false;
+            $data['message'] = "Unable to delete Candidate, please try again later!";
+            $data['data'] = "";
+
+        } else {
+            $record = Candidate::find($request->id);
+            Note::where('user_id', $record->id)->delete();
+
+            $record->delete();
+
+            $data['success'] = true;
+            $data['message'] = "Candidate deleted successfully!";
+            $data['data'] = "";
+
+        }
+
+        return $data;
+    }
+
+    public function delete_note(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'id' => 'required|integer',
+
+        ]);
+        $errors = $validation->errors();
+
+        if (count($errors) > 0) {
+            $data['success'] = false;
+            $data['message'] = "Unable to delete note, please try again later!";
+            $data['data'] = "";
+
+        } else {
+            Note::find($request->id)->delete();
+            AssignedTags::where('note_id', $request->id)->delete();
+            $data['success'] = true;
+            $data['message'] = "Note deleted successfully!";
+            $data['data'] = "";
+
+        }
+
+        return $data;
+    }
+
+    public function candidatelogs()
+    {
+        $details = array();
+        $records = CandidateLog::orderBy('id', 'desc')
+            ->get();
+        foreach ($records as $row) {
+            $details[] = array(
+                // 'id' => $row->id,
+                'name' => $row->name,
+                'email' => $row->email,
+                'phone' => $row->phone,
+                'city' => $row->city,
+                'country' => $row->country,
+                'birth_date' => date('d-m-Y', strtotime($row->birth_date)),
+                'gender' => ($row->gender == 1) ? "Female" : "Male",
+                'image' => asset('uploads/' . $row->image),
+                'pdf' => asset('pdf/' . $row->pdf),
+                'status' => $row->status,
+                'timestamp' => date('d-m-Y g:i A', strtotime($row->created_at)),
+            );
+        }
+        $data['success'] = true;
+        $data['message'] = "Data fetched!";
+        $data['data'] = $details;
+        return $data;
+    }
+    public function candidates()
+    {
+        $details = array();
+        $records = Candidate::orderBy('id', 'desc')
+            ->get();
+        foreach ($records as $row) {
+            $details[] = array(
+                'id' => $row->id,
+                'name' => $row->name,
+                'email' => $row->email,
+                'phone' => $row->phone,
+                'city' => $row->city,
+                'country' => $row->country,
+                'birth_date' => date('d-m-Y', strtotime($row->birth_date)),
+                'gender' => ($row->gender == 1) ? "Female" : "Male",
+                'image' => asset('uploads/' . $row->image),
+            );
+        }
+        $data['success'] = true;
+        $data['message'] = "Data fetched!";
+        $data['data'] = $details;
+        return $data;
+    }
+
+    public function notes()
+    {
+        $details = array();
+        $records = Note::orderBy('id', 'desc')
+            ->get();
+        foreach ($records as $row) {
+            $details[] = array(
+                'id' => $row->id,
+                'candidate' => $row->candidate->name,
+                'note' => $row->note,
+
+            );
+        }
+        $data['success'] = true;
+        $data['message'] = "Data fetched!";
+        $data['data'] = $details;
+        return $data;
+
+    }
+
+    public function update_note(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'id' => 'required|integer',
+            'note' => 'required',
+        ]);
+        $errors = $validation->errors();
+
+        if (count($errors) > 0) {
+            $data['success'] = false;
+            $data['message'] = "Unable to update note, please try again later!";
+            $data['data'] = "";
+
+        } else {
+            Note::where('id', $request->id)->update(
+                [
+                    // 'user_id' => $request->user_id,
+                    'note' => $request->note,
+
+                ]
+            );
+
+            $data['success'] = true;
+            $data['message'] = "Note updated successfully!";
+            $data['data'] = "";
+
+        }
+
+        return $data;
+    }
 
     public function store_note(Request $request)
     {
@@ -104,7 +261,11 @@ class ApiController extends Controller
             $data['data'] = "";
 
         } else {
-
+            $status = "Created";
+            $exist = Candidate::where('email', $request->email)->get();
+            if ($exist->count() > 0) {
+                $status = "Updated";
+            }
             $new = Candidate::updateOrCreate(
                 ['email' => $request->email],
                 [
@@ -144,6 +305,22 @@ class ApiController extends Controller
                 $new->pdf = $fileName1;
                 $new->save();
             }
+
+            CandidateLog::create([
+
+                'name' => $new->name,
+                'email' => $new->email,
+                'password' => $new->password,
+                'birth_date' => date('Y-m-d', strtotime($new->birth_date)),
+                'gender' => $new->gender,
+                'phone' => $new->phone,
+                'city' => $new->city,
+                'country' => $new->country,
+                'image' => $new->image,
+                'pdf' => $new->pdf,
+                'status' => $status,
+            ]);
+
             $data['success'] = true;
             $data['message'] = "Form submitted successfully!";
             $data['data'] = "";

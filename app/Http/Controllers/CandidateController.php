@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Candidate;
 use App\Http\Requests\CandidateRequest;
+use App\Note;
 use App\SetConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -133,7 +134,9 @@ class CandidateController extends Controller
 
     public function destroy(Request $request)
     {
-        Candidate::find($request->id)->delete();
+        $record = Candidate::find($request->id);
+        Note::where('user_id', $record->id)->delete();
+        $record->delete();
         return redirect('candidates');
     }
 

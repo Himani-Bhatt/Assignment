@@ -20,4 +20,10 @@ Route::namespace ('Api')->middleware(['throttle'])->group(function () {
     Route::post('search-records', 'ApiController@search_candidate');
     Route::post('submit-form', 'ApiController@submit_form');
     Route::post('add-note', 'ApiController@store_note');
+    Route::post('edit-note', 'ApiController@update_note');
+    Route::get('notes', 'ApiController@notes');
+    Route::get('candidates', 'ApiController@candidates');
+    Route::get('candidate-logs', 'ApiController@candidatelogs');
+    Route::post('delete-candidate', 'ApiController@delete_candidate');
+    Route::post('delete-note', 'ApiController@delete_note');
 });
