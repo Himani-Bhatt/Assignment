@@ -18,9 +18,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/', 'HomeController@index');
 
     Route::resource('candidates', 'CandidateController');
+    Route::resource('notes', 'NoteController');
+    Route::resource('tags', 'TagController');
     Route::get('settings', 'SettingsController@setting');
     Route::post('settings', 'SettingsController@store');
     Route::post('change-password', 'CandidateController@change_password');
+    Route::post('assign-tag', 'NoteController@assign_tag');
 });
 
 Route::get('submit-form', 'CandidateController@view_form');

@@ -4,11 +4,43 @@ namespace App\Http\Controllers\Api;
 
 use App\Candidate;
 use App\Http\Controllers\Controller;
+use App\Note;
 use Illuminate\Http\Request;
 use Validator;
 
 class ApiController extends Controller
 {
+
+    public function store_note(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'user_id' => 'required|integer',
+            'note' => 'required',
+        ]);
+        $errors = $validation->errors();
+
+        if (count($errors) > 0) {
+            $data['success'] = false;
+            $data['message'] = "Unable to add note, please try again later!";
+            $data['data'] = "";
+
+        } else {
+            $new = Note::create(
+                [
+                    'user_id' => $request->user_id,
+                    'note' => $request->note,
+                ]
+            );
+
+            $data['success'] = true;
+            $data['message'] = "Note added successfully!";
+            $data['data'] = "";
+
+        }
+
+        return $data;
+    }
+
     public function search_candidate(Request $request)
     {
         $validation = Validator::make($request->all(), [

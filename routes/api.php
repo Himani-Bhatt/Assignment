@@ -19,4 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::namespace ('Api')->middleware(['throttle'])->group(function () {
     Route::post('search-records', 'ApiController@search_candidate');
     Route::post('submit-form', 'ApiController@submit_form');
+    Route::post('add-note', 'ApiController@store_note');
 });

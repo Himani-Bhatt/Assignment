@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section("breadcrumb")
-<li class="breadcrumb-item active">Candidates</li>
+<li class="breadcrumb-item active">Notes</li>
 @endsection
 @section('extra_css')
 <style type="text/css">
@@ -15,40 +15,39 @@
   <div class="col-md-12">
     <div class="card card-info">
       <div class="card-header">
-        <h3 class="card-title">Candidates &nbsp;
-        <a href="{{ route('candidates.create')}}" class="btn btn-success">Add</a></h3>
+        <h3 class="card-title">Notes &nbsp;
+        <a href="{{ route('notes.create')}}" class="btn btn-success">Add</a></h3>
       </div>
 
       <div class="card-body table-responsive">
         <table class="table" id="data_table">
           <thead class="thead-inverse">
             <tr>
-              <th>Image</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone no.</th>
-              <th>Gender</th>
-              <!-- <th>Note by admin</th> -->
+
+              <th>Candidate</th>
+              <th>Note</th>
+              <th>Assigned Tags</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             @foreach($data as $row)
               <tr>
+
+                <td>{{$row->candidate->name}}</td>
+                <td>{!! $row->note !!}</td>
                 <td>
-                  <img src="{{asset('uploads/'.$row->image)}}" height="70px" width="70px">
+                  @foreach($row->tags as $record)
+                   <button type="button" class="btn btn-primary"> {{$record->tag->name}}</button>
+                  @endforeach
                 </td>
-                <td>{{$row->name}}</td>
-                <td>{{$row->email}}</td>
-                <td>{{$row->phone}}</td>
-                <td>{{($row->gender == 1)?"Female":"Male"}}</td>
-                <!-- <td>{!! $row->note->note !!}</td> -->
+
                 <td>
 
-              <a class="btn btn-info" class="mybtn changepass" data-id="{{$row->id}}" data-toggle="modal" data-target="#changepass" title="Change Password">Change Password</a>
-              <a class="btn btn-warning" href="{{ url("candidates/".$row->id."/edit") }}"> Edit</a>
+              <a class="btn btn-success" data-id="{{$row->id}}" data-toggle="modal" data-target="#assigntag"> Assign Tag</a>
+              <a class="btn btn-warning" href="{{ url("notes/".$row->id."/edit") }}"> Edit</a>
               <a class="btn btn-danger" data-id="{{$row->id}}" data-toggle="modal" data-target="#myModal"> Delete</a>
-              {!! Form::open(['url' => 'candidates/'.$row->id,'method'=>'DELETE','class'=>'form-horizontal','id'=>'form_'.$row->id]) !!}
+              {!! Form::open(['url' => 'notes/'.$row->id,'method'=>'DELETE','class'=>'form-horizontal','id'=>'form_'.$row->id]) !!}
 
               {!! Form::hidden("id",$row->id) !!}
 
@@ -89,29 +88,29 @@
 
 
 <!-- Modal -->
-<div id="changepass" class="modal fade" role="dialog">
+<div id="assigntag" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Change Password</h4>
+        <h4 class="modal-title">Assign Tag</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
-        {!! Form::open(['url'=>url('change-password'),'id'=>'changepass_form']) !!}
+        {!! Form::open(['url'=>url('assign-tag'),'id'=>'assign_form']) !!}
 
-          {!! Form::hidden('user_id',"",['id'=>'user_id'])!!}
+          {!! Form::hidden('note_id',"",['id'=>'note_id'])!!}
         <div class="form-group">
-          {!! Form::label('passwd','New Password',['class'=>"form-label"]) !!}
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text"><i class="fa fa-lock"></i></span>
-            </div>
-            {!! Form::password('password',['class'=>"form-control",'id'=>'passwd','required']) !!}
-          </div>
+          {!! Form::label('tag','Select Tag',['class'=>"form-label"]) !!}
+          <select id="tag_id" name="tag_id" class="form-control" required>
+              <option value=""></option>
+              @foreach($tags as $tag)
+              <option value="{{$tag->id}}">{{$tag->name}}</option>
+              @endforeach
+          </select>
         </div>
         <div class="modal-footer">
-          <button id="password" class="btn btn-info" type="submit" >Change Password</button>
+          <button id="password" class="btn btn-info" type="submit" >Assign</button>
         </form>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close
         </button>
@@ -120,36 +119,19 @@
   </div>
 </div>
 <!-- Modal -->
+
+
 @endsection
 
 @section('script')
 <script type="text/javascript">
 
-  $('#changepass').on('show.bs.modal', function(e) {
+  $('#assigntag').on('show.bs.modal', function(e) {
     var id = e.relatedTarget.dataset.id;
-    $("#user_id").val(id);
+    $("#note_id").val(id);
   });
 
-   $("#changepass_form").on("submit",function(e){
-    $.ajax({
-      type: "POST",
-      url: $(this).attr("action"),
-      data: $(this).serialize(),
-      success: function(data){
-
-       new PNotify({
-            title: 'Success!',
-            text: "Password has been changed successfully!",
-            type: 'info'
-        });
-      },
-
-      dataType: "html"
-    });
-    $('#changepass').modal("hide");
-    e.preventDefault();
-  });
-
+  // $('#tag_id').select2({placeholder:'Select tag'});
 
   $("#del_btn").on("click",function(){
     var id=$(this).data("submit");

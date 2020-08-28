@@ -124,6 +124,26 @@
           </li>
 
           <li class="nav-item">
+            <a href="{{ url('notes')}}" class="nav-link @if(Request::is('notes*')) active @endif">
+              <i class="nav-icon fa fa-sticky-note"></i>
+              <p>
+                Notes
+                <span class="right badge badge-danger"></span>
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{ url('tags')}}" class="nav-link @if(Request::is('tags*')) active @endif">
+              <i class="nav-icon fa fa-tag"></i>
+              <p>
+                Tags
+                <span class="right badge badge-danger"></span>
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
             <a href="{{ url('settings')}}" class="nav-link @if(Request::is('settings*')) active @endif">
               <i class="nav-icon fa fa-gear"></i>
               <p>
