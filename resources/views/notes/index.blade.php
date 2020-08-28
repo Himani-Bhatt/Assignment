@@ -38,15 +38,15 @@
                 <td>{!! $row->note !!}</td>
                 <td>
                   @foreach($row->tags as $record)
-                   <button type="button" class="btn btn-primary"> {{$record->tag->name}}</button>
+                   <button type="button" class="btn btn-primary" style="margin-top:2px"> {{$record->tag->name}}</button> <br>
                   @endforeach
                 </td>
 
                 <td>
 
-              <a class="btn btn-success" data-id="{{$row->id}}" data-toggle="modal" data-target="#assigntag"> Assign Tag</a>
-              <a class="btn btn-warning" href="{{ url("notes/".$row->id."/edit") }}"> Edit</a>
-              <a class="btn btn-danger" data-id="{{$row->id}}" data-toggle="modal" data-target="#myModal"> Delete</a>
+              <a class="btn btn-success" data-id="{{$row->id}}" data-toggle="modal" data-target="#assigntag" style="margin-top:2px"> Assign Tag</a>
+              <a class="btn btn-warning" href="{{ url("notes/".$row->id."/edit") }}" style="margin-top:2px"> Edit</a>
+              <a class="btn btn-danger" data-id="{{$row->id}}" data-toggle="modal" data-target="#myModal" style="margin-top:2px"> Delete</a>
               {!! Form::open(['url' => 'notes/'.$row->id,'method'=>'DELETE','class'=>'form-horizontal','id'=>'form_'.$row->id]) !!}
 
               {!! Form::hidden("id",$row->id) !!}

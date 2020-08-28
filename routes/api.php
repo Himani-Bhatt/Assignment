@@ -26,4 +26,5 @@ Route::namespace ('Api')->middleware(['throttle'])->group(function () {
     Route::get('candidate-logs', 'ApiController@candidatelogs');
     Route::post('delete-candidate', 'ApiController@delete_candidate');
     Route::post('delete-note', 'ApiController@delete_note');
+    Route::get('thumbnails', 'ApiController@images');
 });

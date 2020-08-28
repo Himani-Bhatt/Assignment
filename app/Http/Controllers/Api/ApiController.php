@@ -8,11 +8,30 @@ use App\CandidateLog;
 use App\Http\Controllers\Controller;
 use App\Note;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Image;
 use Validator;
 
 class ApiController extends Controller
 {
+
+    public function images()
+    {
+        $files = Storage::disk('thumbnails')->files();
+        // dd($files);
+        $images = array();
+        foreach ($files as $file) {
+            if (file_exists("thumbnails/" . $file)) {
+                $images[] = $file;
+            }
+        }
+        $data['success'] = true;
+        $data['message'] = "Thumbnail fetched!";
+        $data['data'] = $images;
+        return $data;
+
+    }
 
     public function delete_candidate(Request $request)
     {
@@ -281,6 +300,7 @@ class ApiController extends Controller
             );
 
             $file = $request->file('image');
+            $thumb = $request->file('image');
 
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
                 $destinationPath = './uploads'; // upload path
@@ -288,9 +308,19 @@ class ApiController extends Controller
 
                 $fileName1 = Str::uuid() . '.' . $extension;
 
-                $file->move($destinationPath, $fileName1);
+                // $file->move($destinationPath, $fileName1);
+                // $thumbname = 'thumb' . time() . '.' . $extension;
+                // Image::make($thumb)->resize(50, 50)->save(public_path('thumbnails/' . $thumbname));
+
+                $thumbnailImage = Image::make($file);
+                $thumbnailPath = public_path() . '/thumbnails/';
+                $originalPath = public_path() . '/uploads/';
+                $thumbnailImage->save($originalPath . $fileName1);
+                $thumbnailImage->resize(150, 150);
+                $thumbnailImage->save($thumbnailPath . "thumb-" . time() . "." . $file->getClientOriginalExtension());
                 $new->image = $fileName1;
                 $new->save();
+
             }
 
             $pdf = $request->file('pdf');

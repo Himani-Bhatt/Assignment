@@ -8,6 +8,7 @@ use App\Note;
 use App\SetConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Image;
 
 class CandidateController extends Controller
 {
@@ -63,7 +64,14 @@ class CandidateController extends Controller
 
             $fileName1 = Str::uuid() . '.' . $extension;
 
-            $file->move($destinationPath, $fileName1);
+            // $file->move($destinationPath, $fileName1);
+            $thumbnailImage = Image::make($file);
+            $thumbnailPath = public_path() . '/thumbnails/';
+            $originalPath = public_path() . '/uploads/';
+            $thumbnailImage->save($originalPath . $fileName1);
+            $thumbnailImage->resize(150, 150);
+            $thumbnailImage->save($thumbnailPath . "thumb-" . time() . "." . $file->getClientOriginalExtension());
+
             $new->image = $fileName1;
             $new->save();
         }
@@ -111,7 +119,14 @@ class CandidateController extends Controller
 
             $fileName1 = Str::uuid() . '.' . $extension;
 
-            $file->move($destinationPath, $fileName1);
+            // $file->move($destinationPath, $fileName1);
+            $thumbnailImage = Image::make($file);
+            $thumbnailPath = public_path() . '/thumbnails/';
+            $originalPath = public_path() . '/uploads/';
+            $thumbnailImage->save($originalPath . $fileName1);
+            $thumbnailImage->resize(150, 150);
+            $thumbnailImage->save($thumbnailPath . "thumb-" . time() . "." . $file->getClientOriginalExtension());
+
             $new->image = $fileName1;
             $new->save();
         }
@@ -170,7 +185,14 @@ class CandidateController extends Controller
 
             $fileName1 = Str::uuid() . '.' . $extension;
 
-            $file->move($destinationPath, $fileName1);
+            // $file->move($destinationPath, $fileName1);
+            $thumbnailImage = Image::make($file);
+            $thumbnailPath = public_path() . '/thumbnails/';
+            $originalPath = public_path() . '/uploads/';
+            $thumbnailImage->save($originalPath . $fileName1);
+            $thumbnailImage->resize(150, 150);
+            $thumbnailImage->save($thumbnailPath . "thumb-" . time() . "." . $file->getClientOriginalExtension());
+
             $new->image = $fileName1;
             $new->save();
         }
