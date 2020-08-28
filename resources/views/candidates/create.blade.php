@@ -73,7 +73,7 @@
                             <label for="phone" class="col-md-4 col-form-label text-md-right">Phone No.</label>
 
                             <div class="col-md-6">
-                                <input id="phone" type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('name') }}" required>
+                                <input id="phone" type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required>
 
                                 @error('phone')
                                     <span class="invalid-feedback" role="alert">
@@ -113,7 +113,7 @@
                             <label for="country" class="col-md-4 col-form-label text-md-right">Country</label>
 
                             <div class="col-md-6">
-                                <input id="country" type="text" class="form-control @error('country') is-invalid @enderror" name="country" value="{{ old('city') }}" required>
+                                <input id="country" type="text" class="form-control @error('country') is-invalid @enderror" name="country" value="{{ old('country') }}" required>
 
                                 @error('country')
                                     <span class="invalid-feedback" role="alert">

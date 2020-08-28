@@ -4,15 +4,34 @@ namespace App\Http\Controllers;
 
 use App\Candidate;
 use App\Http\Requests\CandidateRequest;
+use App\SetConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class CandidateController extends Controller
 {
+    public function change_password(Request $request)
+    {
+        Candidate::where('id', $request->user_id)->update(
+            [
+                'password' => bcrypt($request->password),
+                // 'password' => $request->password,
+
+            ]
+        );
+
+    }
+
     public function index()
     {
         $data = Candidate::orderBy('id', 'desc')->get();
+        $fields = SetConfig::where('value', 1)->get();
+        if ($fields->count() > 0) {
+            return view('candidates.custom_index', compact('data', 'fields'));
+
+        }
         return view('candidates.index', compact('data'));
+
     }
 
     public function create()
@@ -49,15 +68,12 @@ class CandidateController extends Controller
         }
 
         $pdf = $request->file('pdf');
-
         if ($request->hasFile('pdf') && $request->file('pdf')->isValid()) {
-            $destinationPath = './uploads'; // upload path
+            $destinationPath = './pdf'; // upload path
             $extension = $pdf->getClientOriginalExtension();
-
-            $fileName1 = Str::uuid() . '.' . $extension;
-
-            $file->move($destinationPath, $fileName1);
-            $new->pdf = $fileName1;
+            $fileName2 = Str::uuid() . '.' . $extension;
+            $pdf->move($destinationPath, $fileName2);
+            $new->pdf = $fileName2;
             $new->save();
         }
 
@@ -76,7 +92,7 @@ class CandidateController extends Controller
             [
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => bcrypt($request->password),
+                // 'password' => bcrypt($request->password),
                 'birth_date' => date('Y-m-d', strtotime($request->birth_date)),
                 'gender' => $request->gender,
                 'phone' => $request->phone,
@@ -102,12 +118,12 @@ class CandidateController extends Controller
         $pdf = $request->file('pdf');
 
         if ($request->hasFile('pdf') && $request->file('pdf')->isValid()) {
-            $destinationPath = './uploads'; // upload path
+            $destinationPath = './pdf'; // upload path
             $extension = $pdf->getClientOriginalExtension();
 
             $fileName1 = Str::uuid() . '.' . $extension;
 
-            $file->move($destinationPath, $fileName1);
+            $pdf->move($destinationPath, $fileName1);
             $new->pdf = $fileName1;
             $new->save();
         }
@@ -159,12 +175,12 @@ class CandidateController extends Controller
         $pdf = $request->file('pdf');
 
         if ($request->hasFile('pdf') && $request->file('pdf')->isValid()) {
-            $destinationPath = './uploads'; // upload path
+            $destinationPath = './pdf'; // upload path
             $extension = $pdf->getClientOriginalExtension();
 
             $fileName1 = Str::uuid() . '.' . $extension;
 
-            $file->move($destinationPath, $fileName1);
+            $pdf->move($destinationPath, $fileName1);
             $new->pdf = $fileName1;
             $new->save();
         }

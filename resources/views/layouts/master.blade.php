@@ -60,38 +60,10 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
     <!-- logout -->
-    <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="fa fa-user-circle"></i>
-          <span class="badge badge-danger navbar-badge"></span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-
-                <img src="{{ asset("assets/images/no-user.jpg")}}" class="img-size-50 mr-3 img-circle" alt="User Image">
-
-
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  {{Auth::user()->name}}
-
-                  <span class="float-right text-sm text-danger">
-
-                  </span>
-                </h3>
-                <p class="text-sm text-muted">{{Auth::user()->email}}</p>
-                <p class="text-sm text-muted"></p>
-
-              </div>
-            </div>
-            <div>
-            <div>
-
-              <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-secondary btn-flat pull-right"> <i class="fa fa-sign-out"></i>
+    <li class="nav-item">
+          <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="btn btn-secondary btn-flat pull-right nav-link"> <i class="fa fa-sign-out"></i>
               Logout
-              </a>
+          </a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 {{ csrf_field() }}
             </form>
@@ -99,8 +71,7 @@
             <div class="clear"></div>
             </div>
             <!-- Message End -->
-          </a>
-        </div>
+
       </li>
       {{-- <li class="nav-item">
         <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#"><i
@@ -129,7 +100,11 @@
 
         </div>
         <div class="info">
-          <a href="#" class="d-block">{{Auth::user()->name}}</a>
+          <a href="#" class="d-block">
+          {{Auth::user()->name}}
+
+          </a>
+
         </div>
       </div>
 
@@ -143,6 +118,16 @@
               <i class="nav-icon fa fa-users"></i>
               <p>
                 Candidates
+                <span class="right badge badge-danger"></span>
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{ url('settings')}}" class="nav-link @if(Request::is('settings*')) active @endif">
+              <i class="nav-icon fa fa-gear"></i>
+              <p>
+                Field Settings
                 <span class="right badge badge-danger"></span>
               </p>
             </a>
@@ -225,7 +210,7 @@
 $(document).ready(function() {
 
   var table = $('#data_table').DataTable({
-     columnDefs: [ { orderable: false, targets: [0] } ],
+    //  columnDefs: [ { orderable: false, targets: [0] } ],
   });
 
   $('[data-toggle="tooltip"]').tooltip();

@@ -23,29 +23,35 @@
         <table class="table" id="data_table">
           <thead class="thead-inverse">
             <tr>
-              <th>Image</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone no.</th>
-              <th>Gender</th>
+            @foreach($fields as $row)
+              <th>{{$row->label}}</th>
+            @endforeach
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             @foreach($data as $row)
               <tr>
+                @foreach($fields as $key)
+                @php($field_name= $key->name)
+                  <td>
+                  @if($field_name == 'gender')
+                    {{($row->$field_name == 1)? "Female":"Male"}}
+                  @elseif($field_name == 'image')
+                    <img src="{{asset('uploads/'.$row->$field_name)}}" height="70px" width="70px">
+                  @elseif($field_name == 'pdf')
+                   @if($row->$field_name) <a href="{{asset('pdf/'.$row->$field_name)}}"> View</a> @endif
+                  @elseif($field_name == 'birth_date')
+                    {{date('d-m-Y',strtotime($row->$field_name))}}
+                  @else
+                    {{$row->$field_name}}
+                  @endif
+                  </td>
+                @endforeach
                 <td>
-                  <img src="{{asset('uploads/'.$row->image)}}" height="70px" width="70px">
-                </td>
-                <td>{{$row->name}}</td>
-                <td>{{$row->email}}</td>
-                <td>{{$row->phone}}</td>
-                <td>{{($row->gender == 1)?"Female":"Male"}}</td>
-                <td>
-
-              <a class="btn btn-info" class="mybtn changepass" data-id="{{$row->id}}" data-toggle="modal" data-target="#changepass" title="Change Password">Change Password</a>
-              <a class="btn btn-warning" href="{{ url("candidates/".$row->id."/edit") }}"> Edit</a>
-              <a class="btn btn-danger" data-id="{{$row->id}}" data-toggle="modal" data-target="#myModal"> Delete</a>
+                <a class="btn btn-info" class="mybtn changepass" data-id="{{$row->id}}" data-toggle="modal" data-target="#changepass" title="Change Password">Change Password</a> <br>
+              <a class="btn btn-warning" href="{{ url("candidates/".$row->id."/edit") }}" style="margin-top:5px"> Edit</a> <br>
+              <a class="btn btn-danger" data-id="{{$row->id}}" data-toggle="modal" data-target="#myModal"  style="margin-top:5px"> Delete</a>
               {!! Form::open(['url' => 'candidates/'.$row->id,'method'=>'DELETE','class'=>'form-horizontal','id'=>'form_'.$row->id]) !!}
 
               {!! Form::hidden("id",$row->id) !!}
@@ -85,7 +91,6 @@
 </div>
 <!-- Modal -->
 
-
 <!-- Modal -->
 <div id="changepass" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -123,6 +128,7 @@
 @section('script')
 <script type="text/javascript">
 
+
   $('#changepass').on('show.bs.modal', function(e) {
     var id = e.relatedTarget.dataset.id;
     $("#user_id").val(id);
@@ -147,7 +153,6 @@
     $('#changepass').modal("hide");
     e.preventDefault();
   });
-
 
   $("#del_btn").on("click",function(){
     var id=$(this).data("submit");

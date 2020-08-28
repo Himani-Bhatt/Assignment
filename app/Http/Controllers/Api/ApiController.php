@@ -103,12 +103,12 @@ class ApiController extends Controller
             $pdf = $request->file('pdf');
 
             if ($request->hasFile('pdf') && $request->file('pdf')->isValid()) {
-                $destinationPath = './uploads'; // upload path
+                $destinationPath = './pdf'; // upload path
                 $extension = $pdf->getClientOriginalExtension();
 
                 $fileName1 = Str::uuid() . '.' . $extension;
 
-                $file->move($destinationPath, $fileName1);
+                $pdf->move($destinationPath, $fileName1);
                 $new->pdf = $fileName1;
                 $new->save();
             }

@@ -29,7 +29,7 @@ class CandidateRequest extends FormRequest
                 'email' => 'required|email',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg',
                 'pdf' => 'nullable|mimes:pdf,doc,docx',
-                'password' => 'required|min:8',
+                // 'password' => 'required|min:8',
                 'birth_date' => 'required|date',
                 'gender' => 'required|integer',
                 'phone' => 'required',
